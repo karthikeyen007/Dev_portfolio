@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="a" x1="58.97" y1="9.92" x2="38.78" y2="86.59" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#114a8b"/>
+      <stop offset="1" stop-color="#0669bc"/>
+    </linearGradient>
+    <linearGradient id="b" x1="60.03" y1="49.75" x2="55.22" y2="51.92" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-opacity=".3"/>
+      <stop offset=".07" stop-opacity=".2"/>
+      <stop offset=".32" stop-opacity=".1"/>
+      <stop offset=".62" stop-opacity=".05"/>
+      <stop offset="1" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="c" x1="46.28" y1="7.01" x2="58.97" y2="87.99" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3ccbf4"/>
+      <stop offset="1" stop-color="#2892df"/>
+    </linearGradient>
+  </defs>
+  <path d="M33.34 6.54h26.04L34.1 88.98a3.23 3.23 0 01-3.05 2.18H12.98a3.24 3.24 0 01-3.06-4.3L32.29 8.72a3.23 3.23 0 013.05-2.18z" fill="url(#a)"/>
+  <path d="M71.17 60.26H29.88a1.48 1.48 0 00-1.01 2.57l26.63 24.85a3.27 3.27 0 012.23.88h22.57l-9.13-28.3z" fill="url(#b)"/>
+  <path d="M33.34 6.54a3.2 3.2 0 00-3.08 2.23L7.96 86.82a3.24 3.24 0 003.03 4.34h18.74a3.37 3.37 0 002.34-2.05l5.07-14.89 17.7 16.53a3.3 3.3 0 002.1.41h22.7l-9.93-30.9-24.85.02L59.38 6.54z" fill="url(#c)"/>
+</svg>
