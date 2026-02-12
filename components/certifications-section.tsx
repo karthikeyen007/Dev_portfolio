@@ -11,48 +11,49 @@ interface Certification {
   tags: string[]
   color: string
   gradient: string
+  credentialUrl?: string
+  pdfUrl?: string
+  comingSoon?: boolean
 }
 
 const certifications: Certification[] = [
   {
-    title: "AWS Certified Solutions Architect",
-    issuer: "Amazon Web Services",
-    date: "Jan 2025",
-    tags: ["AWS", "Cloud Architecture"],
-    color: "#FF9900",
-    gradient: "from-orange-500 to-amber-500",
-  },
-  {
-    title: "Certified Kubernetes Administrator",
-    issuer: "Cloud Native Computing Foundation",
-    date: "Dec 2024",
-    tags: ["Kubernetes", "DevOps"],
-    color: "#326CE5",
-    gradient: "from-blue-500 to-indigo-500",
-  },
-  {
-    title: "TensorFlow Developer Certificate",
-    issuer: "Google",
-    date: "Nov 2024",
-    tags: ["TensorFlow", "Machine Learning"],
-    color: "#FF6F00",
-    gradient: "from-orange-500 to-red-500",
-  },
-  {
-    title: "Azure Data Engineer Associate",
+    title: "Microsoft Azure Administrator (AZ-104)",
     issuer: "Microsoft",
-    date: "Oct 2024",
-    tags: ["Azure", "Data Engineering"],
+    date: "2025",
+    tags: ["Azure", "Cloud Administration"],
     color: "#0089D6",
-    gradient: "from-cyan-500 to-blue-500",
+    gradient: "from-blue-500 to-cyan-500",
+    credentialUrl: "https://learn.microsoft.com/en-us/users/karthikeyanv-0714672b5/credentials",
+    pdfUrl: "/certificates/AZ-104.pdf",
   },
   {
-    title: "Certified Mid-Level Vue.js Developer",
-    issuer: "Certificates.dev",
-    date: "Aug 2024",
-    tags: ["Vue 3", "Frontend"],
-    color: "#42B883",
-    gradient: "from-emerald-500 to-teal-500",
+    title: "Red Hat Certified System Administrator (RHCSA)",
+    issuer: "Red Hat",
+    date: "2025",
+    tags: ["Linux", "System Administration"],
+    color: "#EE0000",
+    gradient: "from-red-500 to-rose-600",
+    credentialUrl: "https://www.credly.com/users/karthikeyan-v",
+    pdfUrl: "/certificates/RHCSA.pdf",
+  },
+  {
+    title: "Coming Soon",
+    issuer: "New certification in progress",
+    date: "",
+    tags: ["Stay Tuned"],
+    color: "#8B5CF6",
+    gradient: "from-violet-500 to-purple-600",
+    comingSoon: true,
+  },
+  {
+    title: "Coming Soon",
+    issuer: "New certification in progress",
+    date: "",
+    tags: ["Stay Tuned"],
+    color: "#F59E0B",
+    gradient: "from-amber-500 to-yellow-500",
+    comingSoon: true,
   },
 ]
 
@@ -107,12 +108,13 @@ function CertificationCard({
 
         <div className="p-8">
           <div className="flex items-start gap-5">
-            {/* Award icon with 3D effect */}
+            {/* Award icon */}
             <div
               className={`
                 relative w-16 h-16 rounded-2xl bg-gradient-to-br ${cert.gradient} 
                 flex items-center justify-center flex-shrink-0
                 transition-all duration-500
+                ${cert.comingSoon ? 'opacity-40' : ''}
               `}
               style={{
                 transform: isHovered && isActive ? 'translateZ(30px) rotate(-5deg)' : 'translateZ(0) rotate(0deg)',
@@ -125,18 +127,22 @@ function CertificationCard({
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2 leading-tight">
+              <h3 className={`text-xl md:text-2xl font-bold mb-2 leading-tight ${cert.comingSoon ? 'text-muted-foreground/50 italic' : 'text-foreground'}`}>
                 {cert.title}
               </h3>
-              <p className="text-muted-foreground font-semibold mb-1">{cert.issuer}</p>
-              <p className="text-sm text-muted-foreground/70 mb-4">{cert.date}</p>
+              <p className={`font-semibold mb-1 ${cert.comingSoon ? 'text-muted-foreground/40' : 'text-muted-foreground'}`}>
+                {cert.issuer}
+              </p>
+              {cert.date && (
+                <p className="text-sm text-muted-foreground/70 mb-4">{cert.date}</p>
+              )}
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {cert.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-300"
+                    className={`inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-bold transition-all duration-300 ${cert.comingSoon ? 'opacity-40' : ''}`}
                     style={{
                       borderColor: `${cert.color}30`,
                       backgroundColor: `${cert.color}10`,
@@ -150,15 +156,38 @@ function CertificationCard({
             </div>
           </div>
 
-          {/* View certificate link */}
+          {/* Footer links */}
           <div className="mt-6 pt-4 border-t border-border/20">
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors group"
-            >
-              View Certificate
-              <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            {cert.comingSoon ? (
+              <p className="text-sm text-muted-foreground/40 italic font-semibold">
+                🔒 Certification in progress...
+              </p>
+            ) : (
+              <div className="flex items-center gap-4">
+                {cert.credentialUrl && (
+                  <a
+                    href={cert.credentialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors group"
+                  >
+                    View Credential
+                    <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                )}
+                {cert.pdfUrl && (
+                  <a
+                    href={cert.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-primary transition-colors group"
+                  >
+                    View PDF
+                    <ExternalLink size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -251,7 +280,7 @@ export default function CertificationsSection() {
 
               return (
                 <CertificationCard
-                  key={cert.title}
+                  key={index}
                   cert={cert}
                   isActive={index === currentIndex}
                   offset={adjustedOffset}

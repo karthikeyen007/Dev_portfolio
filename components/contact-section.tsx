@@ -1,33 +1,42 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Send, Mail, MapPin, Phone, ArrowUpRight, Loader2 } from "lucide-react"
+import { Send, Mail, MapPin, Phone, ArrowUpRight, Loader2, CheckCircle, XCircle } from "lucide-react"
 import SectionWrapper from "./section-wrapper"
 
 const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@example.com",
-    href: "mailto:hello@example.com",
+    value: "karthikeyen2604@gmail.com",
+    href: "mailto:karthikeyen2604@gmail.com",
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "San Francisco, CA",
-    href: "#",
+    value: "Coimbatore, Tamil Nadu",
+    href: "https://maps.google.com/?q=Coimbatore+Tamil+Nadu",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+1 (555) 123-4567",
-    href: "tel:+15551234567",
+    value: "+91 86374 43440",
+    href: "tel:+918637443440",
   },
 ]
+
+// ─── HOW TO SET UP WEB3FORMS (FREE) ───
+// 1. Go to https://web3forms.com/
+// 2. Enter your email: karthikeyen2604@gmail.com
+// 3. You'll receive an API Access Key via email
+// 4. Paste that key below replacing "YOUR_ACCESS_KEY_HERE"
+// That's it! Form submissions will go straight to your Gmail.
+const WEB3FORMS_KEY = "651db73d-ed87-426f-8a35-0681f0ee1487"
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const [focusedField, setFocusedField] = useState<string | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
@@ -57,10 +66,36 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    setFormData({ name: "", email: "", message: "" })
+    setSubmitStatus("idle")
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          from_name: "Portfolio Contact Form",
+          subject: `New message from ${formData.name}`,
+        }),
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        setSubmitStatus("success")
+        setFormData({ name: "", email: "", message: "" })
+      } else {
+        setSubmitStatus("error")
+      }
+    } catch {
+      setSubmitStatus("error")
+    } finally {
+      setIsSubmitting(false)
+      // Reset status after 5 seconds
+      setTimeout(() => setSubmitStatus("idle"), 5000)
+    }
   }
 
   return (
@@ -76,7 +111,7 @@ export default function ContactSection() {
             <span className="text-sm text-primary font-semibold">Get in Touch</span>
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
-            Let's Work Together
+            Let&apos;s Work Together
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Have a <span className="text-primary font-semibold">project in mind</span>, a{" "}
@@ -98,7 +133,7 @@ export default function ContactSection() {
               </p>
             </div>
 
-            {/* Contact cards with 3D hover */}
+            {/* Contact cards */}
             <div className="space-y-4">
               {contactInfo.map((item, index) => {
                 const Icon = item.icon
@@ -106,6 +141,8 @@ export default function ContactSection() {
                   <a
                     key={item.label}
                     href={item.href}
+                    target={item.label === "Location" ? "_blank" : undefined}
+                    rel={item.label === "Location" ? "noopener noreferrer" : undefined}
                     className={`group relative flex items-center gap-4 p-4 rounded-2xl bg-card border border-border/30 
                       hover:border-primary/30 transition-all duration-500
                       hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1
@@ -115,7 +152,6 @@ export default function ContactSection() {
                       perspective: '1000px',
                     }}
                   >
-                    {/* Icon container with 3D effect */}
                     <div
                       className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 
                         flex items-center justify-center transition-all duration-300
@@ -152,14 +188,14 @@ export default function ContactSection() {
                 />
                 <div className="absolute bottom-4 left-4 right-4">
                   <p className="text-sm text-muted-foreground italic">
-                    "Great things happen when we work together."
+                    &quot;Great things happen when we work together.&quot;
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right side - Form with 3D effects */}
+          {/* Right side - Form */}
           <div
             className={`lg:col-span-3 transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
               }`}
@@ -208,7 +244,6 @@ export default function ContactSection() {
                         focus:shadow-lg focus:shadow-primary/10
                         transition-all duration-300"
                     />
-                    {/* Focus glow */}
                     <div
                       className={`absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-300 ${focusedField === 'name' ? 'opacity-100' : 'opacity-0'
                         }`}
@@ -298,7 +333,21 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {/* Submit button with 3D press effect */}
+                {/* Success / Error message */}
+                {submitStatus === "success" && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 animate-in fade-in slide-in-from-bottom-2">
+                    <CheckCircle size={20} />
+                    <p className="text-sm font-semibold">Message sent successfully! I&apos;ll get back to you soon.</p>
+                  </div>
+                )}
+                {submitStatus === "error" && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 animate-in fade-in slide-in-from-bottom-2">
+                    <XCircle size={20} />
+                    <p className="text-sm font-semibold">Something went wrong. Please try again or email me directly.</p>
+                  </div>
+                )}
+
+                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
